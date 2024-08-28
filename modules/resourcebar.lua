@@ -600,6 +600,7 @@ function ClassMods.SetupResourceBar()
 		if ClassMods.db.profile.resourcebar.stacks[playerSpec][i][1] == true then
 			checkFunction = Check_Flash[ClassMods.db.profile.resourcebar.stacks[playerSpec][i][5]]
 			numBars = maxCharges or ClassMods.db.profile.resourcebar.stacks[playerSpec][i][4]
+			local charges = C_Spell.GetSpellCharges(ClassMods.db.profile.resourcebar.stacks[playerSpec][i][2])
 			if (ClassMods.db.profile.resourcebar.stacks[playerSpec][i][6] == "aura") then
 				if (select(2, UnitClass("player")) == "ROGUE") and (playerSpec == 2) then
 					checkStacksFunction = function(self)
@@ -617,10 +618,10 @@ function ClassMods.SetupResourceBar()
 					if buffIndex then
 						checkStacksFunction = function(self) return(select(4, UnitAura(ClassMods.db.profile.resourcebar.stacks[playerSpec][i][3], buffIndex, "HELPFUL") ) or select(3, UnitAura(ClassMods.db.profile.resourcebar.stacks[playerSpec][i][3], buffIndex, "PLAYER|HARMFUL") ) or 0) end
 					end
-				end
-			elseif (ClassMods.db.profile.resourcebar.stacks[playerSpec][i][6] == "charge") and (GetSpellCharges(ClassMods.db.profile.resourcebar.stacks[playerSpec][i][2]) > 1 ) then
-				checkStacksFunction = function(self) return(select(1, GetSpellCharges(ClassMods.db.profile.resourcebar.stacks[playerSpec][i][2]) ) or 0) end
-				numBars = select(2, GetSpellCharges(ClassMods.db.profile.resourcebar.stacks[playerSpec][i][2]))
+				end				
+			elseif (ClassMods.db.profile.resourcebar.stacks[playerSpec][i][6] == "charge") and (charges.currentCharges > 1) then
+				checkStacksFunction = function(self) return(charges.currentCharges or 0) end
+				numBars = charges.maxCharges
 			end
 		end
 	end
